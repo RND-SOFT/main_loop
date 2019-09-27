@@ -7,7 +7,7 @@ stages:
   image: rnds/ruby:2.5-test
   stage: tests
   variables:
-    COMPOSE_PROJECT_NAME: timeouter_${CI_PIPELINE_ID}_${CI_JOB_ID}
+    COMPOSE_PROJECT_NAME: main_loop_${CI_PIPELINE_ID}_${CI_JOB_ID}
   script:
     - docker-compose build --force-rm --pull test-${CASE}
     - docker-compose up --force-recreate -t 1 --remove-orphans -d test-${CASE}
@@ -73,7 +73,7 @@ badges:
   variables:
     BRANCH_LOCK: ci/${CI_PROJECT_NAME}/${CI_COMMIT_REF_SLUG}
     ENV_LOCK: ci/${CI_PROJECT_NAME}/${CI_ENVIRONMENT_SLUG}
-    BADGES: https://lysander.x.rnds.pro/api/v1/badges/timeouter
+    BADGES: https://lysander.x.rnds.pro/api/v1/badges/main_loop
   script:
     - bundle audit update
     - bundle audit || true

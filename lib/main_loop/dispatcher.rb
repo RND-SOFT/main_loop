@@ -74,6 +74,10 @@ module MainLoop
       @terminating_at && (Time.now - @terminating_at) >= @timeout
     end
 
+    def pids
+      handlers.map{|h| h.pid rescue nil }.compact
+    end
+
     # :nocov:
     def try_exit!
       synchronize do
