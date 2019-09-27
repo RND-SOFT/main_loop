@@ -1,7 +1,6 @@
 require 'main_loop/handler'
 
 module MainLoop
-
   class ThreadHandler < MainLoop::Handler
 
     attr_reader :thread

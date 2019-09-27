@@ -65,7 +65,7 @@ RSpec.describe MainLoop::Dispatcher do
   end
 
   describe '#tick' do
-    before do 
+    before do
       subject.logger.level = Logger::INFO
       subject.add_handler(handler)
     end
@@ -84,7 +84,7 @@ RSpec.describe MainLoop::Dispatcher do
       dispatcher.tick
     end
 
-   it 'should force kill only once' do
+    it 'should force kill only once' do
       expect(handler).to receive(:term)
       dispatcher.term
       expect(dispatcher).to receive(:try_exit!).exactly(3)
@@ -95,7 +95,6 @@ RSpec.describe MainLoop::Dispatcher do
       dispatcher.tick
       dispatcher.tick
     end
-
   end
 end
 

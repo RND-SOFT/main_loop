@@ -66,7 +66,6 @@ RSpec.describe MainLoop::Loop do
       bus.puts('reap:id:status')
       subject.start_loop_forever(timeout)
     end
-
   end
 end
 

@@ -9,7 +9,7 @@ RSpec.describe MainLoop::ThreadHandler do
   describe '#reap' do
     it do
       is_expected.to receive(:handle_retry)
-      subject.reap("status")
+      subject.reap('status')
       is_expected.to be_finished
       is_expected.not_to be_running
       is_expected.not_to be_success

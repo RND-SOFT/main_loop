@@ -26,6 +26,5 @@ RSpec.describe MainLoop::Handler do
       end
     end
   end
-
 end
 
