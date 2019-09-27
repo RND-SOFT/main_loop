@@ -4,8 +4,8 @@
 [![Gem](https://img.shields.io/gem/dt/main_loop.svg)](https://rubygems.org/gems/main_loop/versions)
 [![YARD](https://badgen.net/badge/YARD/doc/blue)](http://www.rubydoc.info/gems/main_loop)
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/test_coverage)](https://codeclimate.com/github/RnD-Soft/main_loop/test_coverage)
-[![Maintainability](https://api.codeclimate.com/v1/badges/ed48b89a9793a074cd23/maintainability)](https://codeclimate.com/github/RnD-Soft/main_loop/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/baf9b1dc3dae87f7edfd/test_coverage)](https://codeclimate.com/github/RnD-Soft/main_loop/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/baf9b1dc3dae87f7edfd/maintainability)](https://codeclimate.com/github/RnD-Soft/main_loop/maintainability)
 [![Quality](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.html)
 [![Outdated](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.html)
 [![Vulnerabilities](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.html)
