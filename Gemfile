@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-gemspec name: 'timeouter'
+gemspec name: 'main_loop'
 

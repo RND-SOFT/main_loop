@@ -4,11 +4,11 @@ Gem::Specification.new 'main_loop' do |spec|
   spec.version       = ENV['BUILDVERSION'].to_i > 0 ? "#{MainLoop::VERSION}.#{ENV['BUILDVERSION'].to_i}" : MainLoop::VERSION
   spec.authors       = ['Samoilenko Yuri']
   spec.email         = ['kinnalru@gmail.com']
-  spec.description   = spec.summary = 'Timeouter is advisory timeout helper without any background threads.'
+  spec.description   = spec.summary = 'Main Loop implementation to control subprocesses and threads'
   spec.homepage      = 'https://github.com/RnD-Soft/main_loop'
   spec.license       = 'MIT'
 
-  spec.files         = %w(lib/timeouter.rb lib/timeouter/timer.rb lib/timeouter/version.rb README.md LICENSE).reject do |f|
+  spec.files         = `git ls-files -z lib/main_loop.rb lib/main_loop README.md LICENSE features`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
   end
 
