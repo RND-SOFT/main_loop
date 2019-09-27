@@ -26,6 +26,11 @@ stages:
     paths:
       - .coverage
 
+ruby-2.5:
+  extends: .test
+  variables:
+    CASE: '2.5'
+
 ruby-2.6:
   extends: .test
   variables:
