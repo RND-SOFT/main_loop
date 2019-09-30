@@ -14,6 +14,7 @@ module MainLoop
       @timeout = timeout
       @handlers = []
       @logger = logger || Logger.new(nil)
+      @exit_code = 0
     end
 
     def reap(statuses)
@@ -57,6 +58,11 @@ module MainLoop
       end
     end
 
+    def crash
+      @exit_code = 3
+      term unless terminating?
+    end
+
     def tick
       log_status if logger.debug?
       return unless terminating?
@@ -84,7 +90,7 @@ module MainLoop
         return unless handlers.all?(&:finished?)
 
         logger.info('All handlers finished exiting...')
-        status = handlers.all?(&:success?) ? 0 : 1
+        status = handlers.all?(&:success?) ? @exit_code : 1
         exit status
       end
     end

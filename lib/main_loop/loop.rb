@@ -37,6 +37,8 @@ module MainLoop
         case event
         when 'term'
           term(event)
+        when 'crash'
+          crash(event)
         when /sig:/
           signal(event)
         when /reap:/
@@ -81,6 +83,10 @@ module MainLoop
 
     def term(_command)
       @dispatcher.term unless @dispatcher.terminating?
+    end
+
+    def crash(_command)
+      @dispatcher.crash
     end
 
     def reap(command)
