@@ -91,6 +91,7 @@ module MainLoop
 
         logger.info('All handlers finished exiting...')
         status = handlers.all?(&:success?) ? @exit_code : 1
+        logger.info("Exit: #{status}")
         exit status
       end
     end

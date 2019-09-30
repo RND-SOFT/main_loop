@@ -50,6 +50,10 @@ module MainLoop
     end
     # :nocov:
 
+    def on_term &block
+      @on_term = block
+    end
+
     # :nocov:
     def finished?
       @finished

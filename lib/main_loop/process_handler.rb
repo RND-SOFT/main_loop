@@ -43,6 +43,7 @@ module MainLoop
       else
         @terminating_at ||= Time.now
         logger.info "Process[#{name}] send terminate: Pid:#{@pid}"
+        @on_term&.call(@pid) rescue nil
         ::Process.kill('TERM', @pid) rescue nil
       end
     end

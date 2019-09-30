@@ -22,9 +22,9 @@ module MainLoop
       logger.info "Thread[#{name}] exited: thread:#{@thread} Status:#{status}"
       @thread = nil
       @finished = true
-      @success = false
 
       return if terminating?
+      @success = false
 
       handle_retry
     end
@@ -42,7 +42,9 @@ module MainLoop
         @thread.kill rescue nil
       else
         @terminating_at ||= Time.now
+        @success = true
         logger.info "Thread[#{name}] send terminate: thread:#{@thread}"
+        @on_term&.call(@thread) rescue nil
       end
     end
 

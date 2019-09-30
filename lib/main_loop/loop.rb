@@ -29,7 +29,7 @@ module MainLoop
     end
 
     def start_loop_forever(timeout = 0)
-      wait = [timeout, 10].min
+      wait = [[(timeout / 2.5), 5].min, 5].max
       Timeouter.loop(timeout) do
         event = @bus.gets(wait)
         logger.debug("command:#{event}")
@@ -49,7 +49,7 @@ module MainLoop
           logger.debug("unknown event:#{event}")
         end
 
-        @dispatcher.reap(reap_children)
+        @dispatcher.reap(reap_children) rescue nil
         @dispatcher.tick
       end
     end
