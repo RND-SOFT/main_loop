@@ -6,9 +6,9 @@
 
 [![Test Coverage](https://api.codeclimate.com/v1/badges/baf9b1dc3dae87f7edfd/test_coverage)](https://codeclimate.com/github/RnD-Soft/main_loop/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/baf9b1dc3dae87f7edfd/maintainability)](https://codeclimate.com/github/RnD-Soft/main_loop/maintainability)
-[![Quality](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.html)
-[![Outdated](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.html)
-[![Vulnerabilities](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.html)
+[![Quality](https://lysander.rnds.pro/api/v1/badges/main_loop_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.html)
+[![Outdated](https://lysander.rnds.pro/api/v1/badges/main_loop_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.html)
+[![Vulnerabilities](https://lysander.rnds.pro/api/v1/badges/main_loop_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.html)
 
 MainLoop is a simple main application implementation to control subprocesses(children) and threads.
 
