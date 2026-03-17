@@ -26,10 +26,10 @@ module MainLoop
     def reap_by_id(id, status)
       synchronize do
         if (handler = handlers.find {|h| h.id == id })
-          logger.info("Reap handler #{handler.name.inspect}. Status: #{status.inspect}")
+          logger.info("Reap handler #{handler.name.inspect}. Status: #{status&.inspect}")
           handler.reap(status)
         else
-          logger.debug("Reap unknown handler. Status: #{status.inspect}. Skipped")
+          logger.debug("Reap unknown handler. Status: #{status&.inspect}. Skipped")
         end
       end
     end
