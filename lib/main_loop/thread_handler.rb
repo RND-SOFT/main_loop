@@ -137,16 +137,16 @@ module MainLoop
     # @return [Thread] созданный поток
     protected
 
-    def start_thread
-      @thread = Thread.new do
-        yield(self)
-      rescue StandardError => e
-        logger.error "Thread[#{name}] crashed: #{e.message}"
-      ensure
-        publish("reap:#{id}:exited")
-      end
-      @finished = false
-      logger.info "Thread[#{name}] created: thread:#{@thread}"
+      def start_thread
+        @thread = Thread.new do
+          yield(self)
+        rescue StandardError => e
+          logger.error "Thread[#{name}] crashed: #{e.message}"
+        ensure
+          publish("reap:#{id}:exited")
+        end
+        @finished = false
+        logger.info "Thread[#{name}] created: thread:#{@thread}"
     end
   end
 end

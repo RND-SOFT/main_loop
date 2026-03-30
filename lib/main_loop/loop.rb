@@ -80,6 +80,8 @@ module MainLoop
     #
     # @param timeout [Numeric] таймаут цикла в секундах (0 = бесконечный)
     def start_loop_forever(timeout = 0)
+      # TODO поскольку wait всегда равен 5 секунд, то цикл работы 5 секунд, и потому 
+      # timeout для Dispatcher нужно ставить больше 2 циклов, чтобы успели завершиться все потоки или процессы
       wait = [[(timeout / 2.5), 5].min, 5].max
       Timeouter.loop(timeout) do
         event = @bus.gets(wait)

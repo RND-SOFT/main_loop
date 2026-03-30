@@ -146,15 +146,15 @@ module MainLoop
     # @return [Integer] PID дочернего процесса
     protected
 
-    def start_fork
-      @pid = Kernel.fork do
-        yield
-      rescue StandardError => e
-        logger.error "Process[#{name}] crashed: #{e.message}"
-        exit!(1)
+      def start_fork
+        @pid = Kernel.fork do
+          yield
+        rescue StandardError => e
+          logger.error "Process[#{name}] crashed: #{e.message}"
+          exit!(1)
+        end
+        @finished = false
+        logger.info "Process[#{name}] created: Pid:#{@pid}"
       end
-      @finished = false
-      logger.info "Process[#{name}] created: Pid:#{@pid}"
-    end
   end
 end
