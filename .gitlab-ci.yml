@@ -63,8 +63,6 @@ build:
       - ./*.gem
       - coverage/*
       - rubycritic/*
-  only:
-    - master
 
 pushgem:
   image: rnds/ruby:3.0-test
