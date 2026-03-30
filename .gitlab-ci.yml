@@ -31,7 +31,7 @@ ruby-3.2:
   variables:
     RUBY_VERSION: '3.2'
 
-ruby-3.2:
+ruby-3.4:
   extends: .test
   variables:
     RUBY_VERSION: '3.4'
