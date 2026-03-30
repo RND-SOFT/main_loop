@@ -4,41 +4,49 @@ stages:
   - deploy
 
 .test:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: tests
   variables:
     COMPOSE_PROJECT_NAME: main_loop_${CI_PIPELINE_ID}_${CI_JOB_ID}
     GIT_BRANCH: ${CI_COMMIT_REF_NAME}
     GIT_COMMIT: ${CI_COMMIT_SHA}
   script:
-    - docker-compose build --force-rm --pull test-${CASE}
-    - docker-compose up --force-recreate -t 1 --remove-orphans -d test-${CASE}
-    - docker-compose exec -T test-${CASE} rspec | tee .coverage
-    - docker-compose exec -T -e GIT_BRANCH -e GIT_COMMIT test-${CASE} ./cc-test-reporter after-build -r ${CODECLIMATE_TOKEN}
-    - docker-compose exec -T test-${CASE} cat rspec.xml > rspec-${CASE}.xml
+    - docker-compose build --force-rm --pull test
+    - docker-compose up --force-recreate -t 1 --remove-orphans -d test
+    - docker-compose exec -T test bundle exec rspec | tee .coverage
+    - docker-compose exec -T test cat rspec.xml > rspec-${RUBY_VERSION}.xml
+    - docker-compose exec -T test cat coverage/coverage.xml > coverage-${RUBY_VERSION}.xml
   after_script:
     - docker-compose down -v --remove-orphans
   coverage: '/\(\d+.\d+\%\) covered/'
   artifacts:
     reports:
       junit: rspec*.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage*.xml
     name: "coverage"
     paths:
       - .coverage
+      - coverage
 
-ruby-2.5:
+ruby-3.2:
   extends: .test
   variables:
-    CASE: '2.5'
+    RUBY_VERSION: '3.2'
 
-ruby-2.6:
+ruby-3.4:
   extends: .test
   variables:
-    CASE: '2.6'
+    RUBY_VERSION: '3.4'
 
+ruby-4.0:
+  extends: .test
+  variables:
+    RUBY_VERSION: '4.0'
 
 build:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: build
   variables:
     BUILDVERSION: ${CI_PIPELINE_ID}
@@ -53,11 +61,11 @@ build:
     name: "gem"
     paths:
       - ./*.gem
-  only:
-    - master
+      - coverage/*
+      - rubycritic/*
 
 pushgem:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: deploy
   script:
     - mkdir -p ~/.gem
@@ -69,22 +77,27 @@ pushgem:
     - master
 
 badges:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: deploy
   allow_failure: true
   variables:
     BRANCH_LOCK: ci/${CI_PROJECT_NAME}/${CI_COMMIT_REF_SLUG}
     ENV_LOCK: ci/${CI_PROJECT_NAME}/${CI_ENVIRONMENT_SLUG}
-    BADGES: https://lysander.x.rnds.pro/api/v1/badges/main_loop
+    BADGES: https://lysander.rnds.pro/api/v1/badges/main_loop
   script:
     - bundle audit update
     - bundle audit || true
     - bundle outdated --only-explicit --no-pre --group default || true
+
     - vulnerable=$(bundle audit | grep "Name:" | sort | uniq | wc -l) || true
     - outdated=$(bundle outdated --only-explicit --no-pre --group default | grep "*" | wc -l) || true
-    - curl -X PUT --oauth2-bearer ${BADGE_TOKEN} "${BADGES}_vulnerable.json?badge[message]=$(bundle audit | grep "Name:" | sort | uniq | wc -l)%20gems" || true
-    - curl -X PUT --oauth2-bearer ${BADGE_TOKEN} "${BADGES}_outdated.json?badge[message]=$(bundle outdated --only-explicit --no-pre --group default | grep "*" | wc -l)%20gems" || true
-    - curl -X PUT --oauth2-bearer ${BADGE_TOKEN} "${BADGES}_quality.json?badge[message]=$(rubycritic -f lint lib | tail -n 1 | cut -d ' ' -f2)%25" || true
-    - curl -X PUT --oauth2-bearer ${BADGE_TOKEN} "${BADGES}_coverage.json?badge[message]=$(cat .coverage | ruby -e 'puts /\((\d+.\d+)\%\) covered/.match(STDIN.read)[1]')%25" || true
+    - quality=$(rubycritic -f lint lib | tail -n 1 | cut -d ' ' -f2) || true
+    - coverage=$(cat .coverage | ruby -e 'puts /\((\d+.\d+)\%\) covered/.match(STDIN.read)[1]') || true
+
+    - curl -X PUT -m 3.0 --oauth2-bearer ${BADGE_TOKEN} -H "Content-Type:application/json" -d "{\"badge\":{\"label\":\"vulnerable\", \"color\":\"red\", \"message\":\"${vulnerable} gems\", \"redirect_url\":\"${CI_PROJECT_URL}\"}}" "${BADGES}_vulnerable.json" || true
+    - curl -X PUT -m 3.0 --oauth2-bearer ${BADGE_TOKEN} -H "Content-Type:application/json" -d "{\"badge\":{\"label\":\"outdated\", \"color\":\"orange\", \"message\":\"${outdated} gems\", \"redirect_url\":\"${CI_PROJECT_URL}\"}}" "${BADGES}_outdated.json" || true
+    - curl -X PUT -m 3.0 --oauth2-bearer ${BADGE_TOKEN} -H "Content-Type:application/json" -d "{\"badge\":{\"label\":\"quality\", \"color\":\"lightgray\", \"message\":\"${quality}%\", \"redirect_url\":\"${CI_PROJECT_URL}\"}}" "${BADGES}_quality.json" || true
+    - curl -X PUT -m 3.0 --oauth2-bearer ${BADGE_TOKEN} -H "Content-Type:application/json" -d "{\"badge\":{\"label\":\"coverage\", \"color\":\"brightgreen\", \"message\":\"${coverage}%\", \"redirect_url\":\"${CI_PROJECT_URL}\"}}" "${BADGES}_coverage.json" || true
+
   only: 
     - master

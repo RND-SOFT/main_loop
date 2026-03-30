@@ -3,22 +3,10 @@ version: "2.3"
 
 
 services:
-  test-2.5:
+  test:
     build:
       context: .
       args:
-        RUBY_VERSION: 2.5
-    image: mainloop-tests:2.5
+        RUBY_VERSION: ${RUBY_VERSION-3.0}
+    image: mainloop-tests:${RUBY_VERSION-3.0}
     working_dir: /home/app
-    
-  test-2.6:
-    build:
-      context: .
-      args:
-        RUBY_VERSION: 2.6
-    image: mainloop-tests:2.6
-    working_dir: /home/app
-    
-    
-
-

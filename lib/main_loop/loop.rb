@@ -28,6 +28,8 @@ module MainLoop
       # :nocov:
     end
 
+    # TODO поскольку wait всегда равен 5 секунд, то цикл работы 5 секунд, и потому 
+    # timeout для Dispatcher нужно ставить больше 2 циклов, чтобы успели завершиться все потоки или процессы
     def start_loop_forever(timeout = 0)
       wait = [[(timeout / 2.5), 5].min, 5].max
       Timeouter.loop(timeout) do
@@ -98,8 +100,12 @@ module MainLoop
       results = []
 
       @dispatcher.pids.each do |pid|
-        if (result = self.wait2(pid))
-          results << result
+        begin
+          if (result = self.wait2(pid))
+            results << result
+          end
+        rescue Errno::ECHILD
+          results << [pid, nil]
         end
       end
 

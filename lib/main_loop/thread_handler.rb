@@ -5,13 +5,22 @@ module MainLoop
 
     attr_reader :thread
 
-    def initialize(dispatcher, name, **kwargs, &block)
+    def initialize(dispatcher, name, runnable: nil, **kwargs, &block)
       super
       @handler_type = 'Thread'
       @thread = nil
       dispatcher.add_handler(self)
 
-      run(&block) if block_given?
+      if runnable
+        unless runnable.respond_to?(:run) && runnable.respond_to?(:on_term)
+          raise TypeError, "Runnable object must respond to :run and :on_term"
+        end
+      end
+
+      @runnable = runnable
+      @block = block
+
+      run
     end
 
     def id
@@ -44,6 +53,8 @@ module MainLoop
         @terminating_at ||= Time.now
         @success = true
         logger.info "Thread[#{name}] send terminate: thread:#{@thread}"
+
+        @runnable&.on_term(@thread) rescue nil
         @on_term&.call(@thread) rescue nil
       end
     end
@@ -59,11 +70,14 @@ module MainLoop
       @thread.kill rescue nil
     end
 
-    def run(&block)
+    def run
       return if terminating?
 
-      @block = block
-      start_thread(&@block)
+      if @runnable
+        start_thread { @runnable.run(self) }
+      elsif @block
+        start_thread(&@block)
+      end
     end
 
     protected
@@ -71,6 +85,8 @@ module MainLoop
       def start_thread
         @thread = Thread.new do
           yield(self)
+        rescue StandardError => e
+          logger.error "Thread[#{name}] crashed: #{e.message}"
         ensure
           publish("reap:#{id}:exited")
         end
@@ -81,4 +97,3 @@ module MainLoop
 
   end
 end
-

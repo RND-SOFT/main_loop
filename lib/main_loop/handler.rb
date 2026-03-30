@@ -81,10 +81,10 @@ module MainLoop
     def handle_retry
       if @retry_count == :unlimited
         logger.info "#{@handler_type}[#{name}] retry...."
-        self.run(&@block)
+        self.run
       elsif @retry_count && (@retry_count -= 1) >= 0
         logger.info "#{@handler_type}[#{name}] retry...."
-        self.run(&@block)
+        self.run
       else
         publish(:term)
       end

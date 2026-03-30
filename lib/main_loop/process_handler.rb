@@ -5,13 +5,22 @@ module MainLoop
 
     attr_reader :pid
 
-    def initialize(dispatcher, name, **kwargs, &block)
+    def initialize(dispatcher, name, runnable: nil, **kwargs, &block)
       super
       @handler_type = 'Process'
       @pid = nil
       dispatcher.add_handler(self)
 
-      run(&block) if block_given?
+      if runnable
+        unless runnable.respond_to?(:run) && runnable.respond_to?(:on_term)
+          raise TypeError, "Runnable object must respond to :run and :on_term"
+        end
+      end
+
+      @runnable = runnable
+      @block = block
+
+      run
     end
 
     def id
@@ -19,10 +28,15 @@ module MainLoop
     end
 
     def reap(status)
-      logger.info "Process[#{name}] exited: Pid:#{@pid} Status: #{status.exitstatus.inspect} Termsig: #{status.termsig.inspect} Success: #{status.success?}"
+      if status
+        logger.info "Process[#{name}] exited: Pid:#{@pid} Status: #{status.exitstatus.inspect} Termsig: #{status.termsig.inspect} Success: #{status.success?}"
+        @success = !!status.success?
+      else 
+        logger.info "Process[#{name}] exited: Pid:#{@pid} with unknown status"
+        @success = true # TODO или false?
+      end
       @pid = nil
       @finished = true
-      @success = !!status.success?
 
       return if terminating?
 
@@ -43,7 +57,10 @@ module MainLoop
       else
         @terminating_at ||= Time.now
         logger.info "Process[#{name}] send terminate: Pid:#{@pid}"
+
+        @runnable&.on_term(@pid) rescue nil
         @on_term&.call(@pid) rescue nil
+
         ::Process.kill('TERM', @pid) rescue nil
       end
     end
@@ -59,11 +76,14 @@ module MainLoop
       ::Process.kill('KILL', @pid) rescue nil
     end
 
-    def run(&block)
+    def run
       return if terminating?
 
-      @block = block
-      start_fork(&@block)
+      if @runnable
+        start_fork { @runnable.run }
+      elsif @block
+        start_fork(&@block)
+      end
     end
 
     protected
@@ -71,6 +91,9 @@ module MainLoop
       def start_fork
         @pid = Kernel.fork do
           yield
+        rescue StandardError => e
+          logger.error "Process[#{name}] crashed: #{e.message}"
+          exit!(1)
         end
         @finished = false
         logger.info "Process[#{name}] created: Pid:#{@pid}"
@@ -79,4 +102,3 @@ module MainLoop
 
   end
 end
-
