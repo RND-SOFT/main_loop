@@ -323,7 +323,7 @@ MainLoop::ThreadHandler.new dispatcher, 'worker', retry_count: 0, logger: logger
     break if @stop
   end
 end
-
+```
 
 #### Поток с объектом runnable / Thread with runnable object
 
