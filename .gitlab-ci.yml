@@ -13,9 +13,10 @@ stages:
   script:
     - docker-compose build --force-rm --pull test
     - docker-compose up --force-recreate -t 1 --remove-orphans -d test
-    - ruby -v
+    - docker-compose exec -T test ruby -v
     - docker-compose exec -T test rspec | tee .coverage
     - docker-compose exec -T test cat rspec.xml > rspec-${RUBY_VERSION}.xml
+    - docker-compose exec -T test cat coverage/coverage.xml > coverage-${RUBY_VERSION}.xml
   after_script:
     - docker-compose down -v --remove-orphans
   coverage: '/\(\d+.\d+\%\) covered/'
