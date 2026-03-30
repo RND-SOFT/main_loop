@@ -21,10 +21,12 @@
 
 require 'simplecov'
 require 'simplecov-console'
+require 'simplecov-cobertura'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
                                                                  SimpleCov::Formatter::HTMLFormatter, # for gitlab
-                                                                 SimpleCov::Formatter::Console # for developers
+                                                                 SimpleCov::Formatter::Console, # for developers
+                                                                 SimpleCov::Formatter::CoberturaFormatter # for gitlab Cobertura
                                                                ])
 SimpleCov.start
 
