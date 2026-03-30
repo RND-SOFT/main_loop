@@ -4,9 +4,10 @@
 [![Gem](https://img.shields.io/gem/dt/main_loop.svg)](https://rubygems.org/gems/main_loop/versions)
 [![YARD](https://badgen.net/badge/YARD/doc/blue)](http://www.rubydoc.info/gems/main_loop)
 
-[![Quality](https://lysander.rnds.pro/api/v1/badges/main_loop_quality.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_quality.html)
-[![Outdated](https://lysander.rnds.pro/api/v1/badges/main_loop_outdated.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_outdated.html)
-[![Vulnerabilities](https://lysander.rnds.pro/api/v1/badges/main_loop_vulnerable.svg)](https://lysander.x.rnds.pro/api/v1/badges/main_loop_vulnerable.html)
+[![Coverage](https://lysander.rnds.pro/api/v1/badges/main_loop_coverage.svg)](https://lysander.rnds.pro/api/v1/badges/main_loop_coverage.html)
+[![Quality](https://lysander.rnds.pro/api/v1/badges/main_loop_quality.svg)](https://lysander.rnds.pro/api/v1/badges/main_loop_quality.html)
+[![Outdated](https://lysander.rnds.pro/api/v1/badges/main_loop_outdated.svg)](https://lysander.rnds.pro/api/v1/badges/main_loop_outdated.html)
+[![Vulnerabilities](https://lysander.rnds.pro/api/v1/badges/main_loop_vulnerable.svg)](https://lysander.rnds.pro/api/v1/badges/main_loop_vulnerable.html)
 
 MainLoop is a simple main application implementation to control subprocesses(children) and threads.
 
