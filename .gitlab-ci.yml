@@ -4,18 +4,18 @@ stages:
   - deploy
 
 .test:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: tests
   variables:
     COMPOSE_PROJECT_NAME: main_loop_${CI_PIPELINE_ID}_${CI_JOB_ID}
     GIT_BRANCH: ${CI_COMMIT_REF_NAME}
     GIT_COMMIT: ${CI_COMMIT_SHA}
   script:
-    - docker-compose build --force-rm --pull test-${CASE}
-    - docker-compose up --force-recreate -t 1 --remove-orphans -d test-${CASE}
-    - docker-compose exec -T test-${CASE} rspec | tee .coverage
-    - docker-compose exec -T -e GIT_BRANCH -e GIT_COMMIT test-${CASE} ./cc-test-reporter after-build -r ${CODECLIMATE_TOKEN}
-    - docker-compose exec -T test-${CASE} cat rspec.xml > rspec-${CASE}.xml
+    - docker-compose build --force-rm --pull test-${RUBY_VERSION}
+    - docker-compose up --force-recreate -t 1 --remove-orphans -d test-${RUBY_VERSION}
+    - docker-compose exec -T test-${RUBY_VERSION} rspec | tee .coverage
+    - docker-compose exec -T -e GIT_BRANCH -e GIT_COMMIT test-${RUBY_VERSION} ./cc-test-reporter after-build -r ${CODECLIMATE_TOKEN}
+    - docker-compose exec -T test-${RUBY_VERSION} cat rspec.xml > rspec-${RUBY_VERSION}.xml
   after_script:
     - docker-compose down -v --remove-orphans
   coverage: '/\(\d+.\d+\%\) covered/'
@@ -26,19 +26,23 @@ stages:
     paths:
       - .coverage
 
-ruby-2.5:
+ruby-3.2:
   extends: .test
   variables:
-    CASE: '2.5'
+    RUBY_VERSION: '3.2'
 
-ruby-2.6:
+ruby-3.2:
   extends: .test
   variables:
-    CASE: '2.6'
+    RUBY_VERSION: '3.4'
 
+ruby-4.0:
+  extends: .test
+  variables:
+    RUBY_VERSION: '4.0'
 
 build:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: build
   variables:
     BUILDVERSION: ${CI_PIPELINE_ID}
@@ -57,7 +61,7 @@ build:
     - master
 
 pushgem:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: deploy
   script:
     - mkdir -p ~/.gem
@@ -69,7 +73,7 @@ pushgem:
     - master
 
 badges:
-  image: rnds/ruby:2.5-test
+  image: rnds/ruby:3.0-test
   stage: deploy
   allow_failure: true
   variables:
