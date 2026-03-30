@@ -11,11 +11,11 @@ stages:
     GIT_BRANCH: ${CI_COMMIT_REF_NAME}
     GIT_COMMIT: ${CI_COMMIT_SHA}
   script:
-    - docker-compose build --force-rm --pull test-${RUBY_VERSION}
-    - docker-compose up --force-recreate -t 1 --remove-orphans -d test-${RUBY_VERSION}
-    - docker-compose exec -T test-${RUBY_VERSION} rspec | tee .coverage
-    - docker-compose exec -T -e GIT_BRANCH -e GIT_COMMIT test-${RUBY_VERSION} ./cc-test-reporter after-build -r ${CODECLIMATE_TOKEN}
-    - docker-compose exec -T test-${RUBY_VERSION} cat rspec.xml > rspec-${RUBY_VERSION}.xml
+    - docker-compose build --force-rm --pull test
+    - docker-compose up --force-recreate -t 1 --remove-orphans -d test
+    - docker-compose exec -T test rspec | tee .coverage
+    - docker-compose exec -T -e GIT_BRANCH -e GIT_COMMIT test ./cc-test-reporter after-build -r ${CODECLIMATE_TOKEN}
+    - docker-compose exec -T test cat rspec.xml > rspec-${RUBY_VERSION}.xml
   after_script:
     - docker-compose down -v --remove-orphans
   coverage: '/\(\d+.\d+\%\) covered/'
