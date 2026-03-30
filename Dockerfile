@@ -18,8 +18,6 @@ ADD Gemfile Gemfile.lock *.gemspec /home/app/
 ADD lib/main_loop/version.rb /home/app/lib/main_loop/
 
 RUN set -ex \
-  && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter \
-  && chmod +x cc-test-reporter \
   && gem install bundler && gem update bundler \
   && bundle install --jobs=3 \
   && gem cleanup  \
