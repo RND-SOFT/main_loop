@@ -47,7 +47,7 @@
 
 ## Начало работы / Getting started
 
- gem install main_loop
+> gem install main_loop
 
 При установке `MainLoop` через bundler добавьте следующую строку в `Gemfile`:
 
@@ -55,11 +55,11 @@
 
 If you'd rather install `MainLoop` using bundler, add a line for it in your `Gemfile`:
 
- gem 'main_loop'
+> gem 'main_loop'
 
 Затем выполните / Then run:
 
- bundle install # для установки гема / gem installation
+> bundle install # для установки гема / gem installation
 
 ## Корневой модуль / Root module
 
@@ -451,19 +451,11 @@ ruby -I ./lib examples/имя_файла.rb
 
 ## Версия / Version
 
-Текущая версия: `0.1.4`
-
----
-
-Current version: `0.1.4`
+Текущая версия / Current version: `0.1.4`
 
 ## Автор / Author
 
-Юрий Самойленко <kinnalru@gmail.com>
-
----
-
-Yuri Samoylenko <kinnalru@gmail.com>
+Юрий Самойленко / Yuri Samoylenko <kinnalru@gmail.com>
 
 ## Лицензия / License
 
