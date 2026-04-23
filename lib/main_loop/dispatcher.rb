@@ -130,7 +130,7 @@ module MainLoop
 
     # == Отправить сигнал аварийного завершения
     #
-    # Устанавливает 코드 выхода 3 и инициирует терминацию.
+    # Устанавливает код выхода 3 и инициирует терминацию.
     # Если уже терминация — ничего не делает.
     def crash
       @exit_code = 3
@@ -194,7 +194,7 @@ module MainLoop
     # == Логировать статус
     #
     # Логирует текущее состояние обработчиков (DEBUG уровень).
-    # Формат: "Total:N Running:M Finihsed:K. TERM"
+    # Формат: "Total:N Running:M Finished:K. Success:[] TERM"
     #
     # :nocov:
     def log_status
@@ -202,7 +202,7 @@ module MainLoop
       running = handlers.count(&:running?)
       finihsed = handlers.count(&:finished?)
       term_text = terminating? ? 'TERM' : ''
-      logger.debug("Total:#{total} Running:#{running} Finihsed:#{finihsed}. #{term_text}".strip)
+      logger.debug("Total:#{total} Running:#{running} Finished:#{finihsed} Success:#{handlers.map {|h| h.success?}.to_s}. #{term_text}".strip)
     end
     # :nocov:
   end

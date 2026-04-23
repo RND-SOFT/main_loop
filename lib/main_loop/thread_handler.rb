@@ -7,8 +7,13 @@ require 'main_loop/handler'
 # == Особенности потоков
 #
 # - Потоки не имеют status завершения (как процессы)
-# - Поэтому @success = false для всех завершений (кроме graceful term)
-# - Завершение потока публикуется в ensure блоке
+# - Если завершение graceful term, то @success отражает, завершился ли он после вызова on_term (true) или после нашего kill
+# - Внутри on_term поток может быть завершен так, как считает нужным разработчик метода, например
+#     @stopped = true
+#     @thread&.wakeup
+#     @thread&.kill unless @thread&.join(2)
+# - Если поток завершился сам, то смотрим на Thread.current[:exit_reason]
+# - Завершение потока публикуется в ensure блоке и обрабатывается в MainLoop#start_loop_forever
 #
 # == Сигналы для потока
 #
@@ -69,12 +74,13 @@ module MainLoop
     # @param status [String] статус завершения (описание)
     def reap(status)
       logger.info "Thread[#{name}] exited: thread:#{@thread} Status:#{status}"
+      exit_reason = @thread[:exit_reason] if @thread
       @thread = nil
       @finished = true
 
       return if terminating?
-      @success = false
 
+      @success = (exit_reason == :normal)
       handle_retry
     end
 
@@ -84,7 +90,7 @@ module MainLoop
     def term(*_args)
       unless @thread
         @terminating_at ||= Time.now
-        logger.debug "Thread[#{name}] alredy terminated. Skipped."
+        logger.debug "Thread[#{name}] already terminated. Skipped."
         return
       end
 
@@ -107,7 +113,7 @@ module MainLoop
     # @param *_args (Unused)
     def kill(*_args)
       unless @thread
-        logger.debug "Thread[#{name}] alredy Killed. Skipped."
+        logger.debug "Thread[#{name}] already Killed. Skipped."
         return
       end
 
@@ -133,20 +139,23 @@ module MainLoop
     #
     # Создает новый поток и настраивает обработку ошибок и завершения.
     #
-    # @yield执行 блок кода в потоке
+    # @yield выполнить блок кода в потоке
     # @return [Thread] созданный поток
     protected
 
       def start_thread
         @thread = Thread.new do
           yield(self)
+          Thread.current[:exit_reason] = :normal
         rescue StandardError => e
+          Thread.current[:exit_reason] = :exception
           logger.error "Thread[#{name}] crashed: #{e.message}"
         ensure
+          Thread.current[:exit_reason] ||= :killed
           publish("reap:#{id}:exited")
         end
         @finished = false
         logger.info "Thread[#{name}] created: thread:#{@thread}"
-    end
+      end
   end
 end

@@ -18,30 +18,6 @@ require 'logger'
 # - {#kill} — принудительное завершение
 # - {#reap(status)} — обработка завершения процесса/потока
 #
-# == Пример использования
-#
-#   class MyHandler < MainLoop::Handler
-#     def id
-#       @process_id
-#     end
-#
-#     def term
-#       Process.kill('TERM', @process_id)
-#     end
-#
-#     def run
-#       @process_id = Process.fork { yield }
-#     end
-#
-#     def kill
-#       Process.kill('KILL', @process_id)
-#     end
-#
-#     def reap(status)
-#       # обработка завершения
-#     end
-#   end
-#
 # == См. также
 # - {MainLoop::ProcessHandler} — реализация для процессов
 # - {MainLoop::ThreadHandler} — реализация для потоков

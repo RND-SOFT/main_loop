@@ -92,7 +92,7 @@ module MainLoop
     def term(*_args)
       unless @pid
         @terminating_at ||= Time.now
-        logger.debug "Process[#{name}] alredy terminated. Skipped."
+        logger.debug "Process[#{name}] already terminated. Skipped."
         return
       end
 
@@ -116,7 +116,7 @@ module MainLoop
     # @param *_args (Unused)
     def kill(*_args)
       unless @pid
-        logger.debug "Process[#{name}] alredy Killed. Skipped."
+        logger.debug "Process[#{name}] already Killed. Skipped."
         return
       end
 
@@ -142,7 +142,7 @@ module MainLoop
     #
     # Создает дочерний процесс и настраивает обработку ошибок.
     #
-    # @yield执行 блок кода в дочернем процессе
+    # @yield выполнить блок кода в дочернем процессе
     # @return [Integer] PID дочернего процесса
     protected
 
