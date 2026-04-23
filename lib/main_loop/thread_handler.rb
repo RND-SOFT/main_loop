@@ -90,7 +90,7 @@ module MainLoop
     def term(*_args)
       unless @thread
         @terminating_at ||= Time.now
-        logger.debug "Thread[#{name}] alredy terminated. Skipped."
+        logger.debug "Thread[#{name}] already terminated. Skipped."
         return
       end
 
@@ -112,8 +112,8 @@ module MainLoop
     #
     # @param *_args (Unused)
     def kill(*_args)
-      unless @thread
-        logger.debug "Thread[#{name}] alredy Killed. Skipped."
+      unless @thread                  
+        logger.debug "Thread[#{name}] already Killed. Skipped."
         return
       end
 

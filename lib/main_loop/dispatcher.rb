@@ -194,7 +194,7 @@ module MainLoop
     # == Логировать статус
     #
     # Логирует текущее состояние обработчиков (DEBUG уровень).
-    # Формат: "Total:N Running:M Finihsed:K. TERM"
+    # Формат: "Total:N Running:M Finished:K. Success:[] TERM"
     #
     # :nocov:
     def log_status
@@ -202,7 +202,7 @@ module MainLoop
       running = handlers.count(&:running?)
       finihsed = handlers.count(&:finished?)
       term_text = terminating? ? 'TERM' : ''
-      logger.debug("Total:#{total} Running:#{running} Finihsed:#{finihsed} Success:#{handlers.map {|h| h.success?}.to_s}. #{term_text}".strip)
+      logger.debug("Total:#{total} Running:#{running} Finished:#{finihsed} Success:#{handlers.map {|h| h.success?}.to_s}. #{term_text}".strip)
     end
     # :nocov:
   end
