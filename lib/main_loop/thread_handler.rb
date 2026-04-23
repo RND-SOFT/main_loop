@@ -112,7 +112,7 @@ module MainLoop
     #
     # @param *_args (Unused)
     def kill(*_args)
-      unless @thread                  
+      unless @thread
         logger.debug "Thread[#{name}] already Killed. Skipped."
         return
       end
